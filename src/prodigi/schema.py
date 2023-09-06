@@ -18,7 +18,6 @@ class WrapEnum(str, Enum):
 
 
 class ProductAttributes(BaseModel):
-
     wrap: List[WrapEnum]
 
 
@@ -29,11 +28,20 @@ class Required(BaseModel):
 class ProductPrintAreas(BaseModel):
     default: Required
 
+
 class VariantAttributes(BaseModel):
     wrap: str
+
     #            "attributes": {
     #                "wrap": "Black"
     #            },
+
+
+class ProductVariant(BaseModel):
+    attributes: VariantAttributes
+    shipsTo: List[ShipsToEnum]
+    printAreaSizes: VariantPrintAreaSizes
+
 
 class ProductVariants(BaseModel):
     variants: List[ProductVariant]
@@ -48,12 +56,6 @@ class ProductDetails(BaseModel):
     variants: ProductVariants
 
 
-
-
-
-
-
-
 class PrintAreaDimensions(BaseModel):
     horizontalResolution: int
     VerticalResolution: int
@@ -63,10 +65,7 @@ class VariantPrintAreaSizes(BaseModel):
     default: PrintAreaDimensions
 
 
-class ProductVariant(BaseModel):
-    attributes: VariantAttributes
-    shipsTo: List[ShipsToEnum]
-    printAreaSizes: VariantPrintAreaSizes
+
 
     #    "variants": [
     #            "printAreaSizes": {
