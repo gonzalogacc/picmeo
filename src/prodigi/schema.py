@@ -34,7 +34,6 @@ class VariantAttributes(BaseModel):
     wrap: str
 
 
-
 class ProductVariant(BaseModel):
     attributes: VariantAttributes
     # shipsTo: List[ShipsToEnum]
@@ -61,8 +60,6 @@ class PrintAreaDimensions(BaseModel):
 
 class VariantPrintAreaSizes(BaseModel):
     default: PrintAreaDimensions
-
-
 
 
 class OrderStatusDetails(BaseModel):
@@ -189,6 +186,7 @@ class ShippingMethodEnum(str, Enum):
     standard = 'Standard'
     express = 'Express'
     overnight = 'Overnight'
+
 
 class OrderResponse(BaseModel):
     id: str
