@@ -33,9 +33,6 @@ class ProductPrintAreas(BaseModel):
 class VariantAttributes(BaseModel):
     wrap: str
 
-    #            "attributes": {
-    #                "wrap": "Black"
-    #            },
 
 
 class ProductVariant(BaseModel):
@@ -65,131 +62,7 @@ class PrintAreaDimensions(BaseModel):
 class VariantPrintAreaSizes(BaseModel):
     default: PrintAreaDimensions
 
-    #    "variants": [
-    #            "printAreaSizes": {
-    #                "default": {
-    #                    "horizontalResolution": 1522,
-    #                    "verticalResolution": 1522
-    #                }
-    #            }
-    #        },
-    #        {
-    #            "attributes": {
-    #                "wrap": "ImageWrap"
-    #            },
-    #            "shipsTo": [
-    #                "IM",
-    #                "LU",
-    #                "ID",
-    #                "CI",
-    #                "GR",
-    #                "FK",
-    #                "AL",
-    #                "LA",
-    #                "KY"
-    #            ],
-    #            "printAreaSizes": {
-    #                "default": {
-    #                    "horizontalResolution": 2137,
-    #                    "verticalResolution": 2137
-    #                }
-    #            }
-    #        },
-    #        {
-    #            "attributes": {
-    #                "wrap": "MirrorWrap"
-    #            },
-    #            "shipsTo": [
-    #                "IM",
-    #                "LU",
-    #                "ID",
-    #                "CI",
-    #                "GR",
-    #                "FK",
-    #                "AL",
-    #                "LA",
-    #                "KY"
-    #            ],
-    #            "printAreaSizes": {
-    #                "default": {
-    #                    "horizontalResolution": 1522,
-    #                    "verticalResolution": 1522
-    #                }
-    #            }
-    #        },
-    #        {
-    #            "attributes": {
-    #                "wrap": "White"
-    #            },
-    #            "shipsTo": [
-    #                "IM",
-    #                "LU",
-    #                "ID",
-    #                "CI",
-    #                "GR",
-    #                "FK",
-    #                "AL",
-    #                "LA",
-    #                "KY"
-    #            ],
-    #            "printAreaSizes": {
-    #                "default": {
-    #                    "horizontalResolution": 1522,
-    #                    "verticalResolution": 1522
-    #                }
-    #            }
-    #        }
-    #    ]
-    # }
 
-
-class Order(BaseModel):
-    pass
-    # {
-    #     "merchantReference": "MyMerchantReference1",
-    #     "shippingMethod": "Overnight",
-    #     "recipient": {
-    #         "name": "Mr Testy McTestface",
-    #         "address": {
-    #             "line1": "14 test place",
-    #             "line2": "test",
-    #             "postalOrZipCode": "12345",
-    #             "countryCode": "US",
-    #             "townOrCity": "somewhere",
-    #             "stateOrCounty": null
-    #         }
-    #     },
-    #     "items": [
-    #         {
-    #             "merchantReference": "item #1",
-    #             "sku": "GLOBAL-CFPM-16X20",
-    #             "copies": 1,
-    #             "sizing": "fillPrintArea",
-    #             "attributes": {
-    #                 "color": "black"
-    #             },
-    #             "recipientCost": {
-    #                 "amount": "15.00",
-    #                 "currency": "USD"
-    #             },
-    #             "assets": [
-    #                 {
-    #                     "printArea": "default",
-    #                     "url": "https://pwintyimages.blob.core.windows.net/samples/stars/test-sample-grey.png",
-    #                     "md5Hash": "daa1c811c6038e718a23f0d816914b7b"
-    #                 }
-    #             ]
-    #         }
-    #     ],
-    #     "metadata": {
-    #         "mycustomkey":"some-guid",
-    #         "someCustomerPreference": {
-    #             "preference1": "something",
-    #             "preference2": "red"
-    #         },
-    #         "sourceId": 12345
-    #     }
-    # }
 
 
 class OrderStatusDetails(BaseModel):
@@ -200,8 +73,14 @@ class OrderStatusDetails(BaseModel):
     shipping: str
 
 
+class StatusEnum(str, Enum):
+    in_progress = 'InProgress'
+    complete = 'Complete'
+    cancelled = 'Cancelled'
+
+
 class OrderStatus(BaseModel):
-    stage: str
+    stage: StatusEnum
     issues: List[str]
     details: OrderStatusDetails
 
@@ -300,13 +179,24 @@ class OrderMetadata(BaseModel):
     someCustomerPreference: dict
 
 
+class Callback(BaseModel):
+    ## TODO: Calbback schema still not implemented
+    pass
+
+
+class ShippingMethodEnum(str, Enum):
+    budget = 'Budget'
+    standard = 'Standard'
+    express = 'Express'
+    overnight = 'Overnight'
+
 class OrderResponse(BaseModel):
     id: str
     created: datetime
     lastUpdated: datetime
-    callbackUrl: Optional[str] = None
-    merchantReference: Optional[str]
-    shippingMethod: str
+    callbackUrl: Optional[Callback] = None
+    merchantReference: Optional[str] = None
+    shippingMethod: ShippingMethodEnum
     idempotencyKey: Optional[str] = None
     status: OrderStatus
     charges: List[OrderCharge]
@@ -317,80 +207,15 @@ class OrderResponse(BaseModel):
     metadata: OrderMetadata
 
 
+class OutcomeEnum(str, Enum):
+    ok = "Ok"
+
+
 class RequestResponse(BaseModel):
-    outcome: str
+    outcome: OutcomeEnum
     order: OrderResponse
     traceParent: str
 
 
 class OrderIN(BaseModel):
     pass
-#     {
-#         "id": "ord_840796",
-#         "created": "2021-03-11T14:31:23.41Z",
-#         "lastUpdated": "2021-03-11T14:31:23.4931606Z",
-#         "callbackUrl": null,
-#         "merchantReference": "MyMerchantReference1",
-#         "shippingMethod": "Overnight",
-#         "idempotencyKey": null,
-#         "status": {
-#             "stage": "InProgress",
-#             "issues": [],
-#             "details": {
-#                 "downloadAssets": "NotStarted",
-#                 "printReadyAssetsPrepared": "NotStarted",
-#                 "allocateProductionLocation": "NotStarted",
-#                 "inProduction": "NotStarted",
-#                 "shipping": "NotStarted"
-#             }
-#         },
-#         "charges": [],
-#         "shipments": [],
-#         "recipient": {
-#             "name": "Mr test",
-#             "email": null,
-#             "phoneNumber": null,
-#             "address": {
-#                 "line1": "14 test place",
-#                 "line2": "test",
-#                 "postalOrZipCode": "12345",
-#                 "countryCode": "US",
-#                 "townOrCity": "somewhere",
-#                 "stateOrCounty": null
-#             }
-#         },
-#         "items": [
-#             {
-#                 "id": "ori_926886",
-#                 "status": "NotYetDownloaded",
-#                 "merchantReference": "item #1",
-#                 "sku": "GLOBAL-CFPM-16X20",
-#                 "copies": 1,
-#                 "sizing": "fillPrintArea",
-#                 "attributes": {
-#                     "color": "black"
-#                 },
-#                 "assets": [
-#                     {
-#                         "id": "ast_114059",
-#                         "printArea": "default",
-#                         "md5Hash": "daa1c811c6038e718a23f0d816914b7b",
-#                         "url": "https://pwintyimages.blob.core.windows.net/samples/stars/test-sample-grey.png",
-#                         "status": "InProgress"
-#                     }
-#                 ],
-#                 "recipientCost": {
-#                     "amount": "10.74",
-#                     "currency": "GBP"
-#                 }
-#             }
-#         ],
-#         "packingSlip": null,
-#         "metadata": {
-#             "mycustomkey": "some-guid",
-#             "someCustomerPreference": {
-#                 "preference1": "something",
-#                 "preference2": "red"
-#             },
-#             "sourceId": 12345
-#         }
