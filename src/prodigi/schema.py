@@ -225,6 +225,7 @@ class OutcomeEnum(str, Enum):
     created = 'Created'
     validation_failed = 'ValidationFailed'
 
+
 class Order(BaseModel):
     merchantReference: Optional[str] = None
     shippingMethod: ShippingMethodEnum
@@ -248,4 +249,23 @@ class OrderResponse(Order):
 class RequestResponse(BaseModel):
     outcome: OutcomeEnum
     order: OrderResponse
+    traceParent: str
+
+
+class YesNoEnum(str, Enum):
+    """ It comes like that from prodigi.com go complain with them"""
+    yes = "Yes"
+    no = "No"
+
+
+class IsAvailable(BaseModel):
+    isAvailable: YesNoEnum
+
+
+class OrderActionsResponse(BaseModel):
+    outcome: OutcomeEnum
+    cancel: IsAvailable
+    changeRecipientDetails: IsAvailable
+    changeShippingMethod: IsAvailable
+    changeMetaData: IsAvailable
     traceParent: str

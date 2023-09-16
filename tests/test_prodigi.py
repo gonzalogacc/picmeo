@@ -75,3 +75,10 @@ def test_create_order(prodigi_test_client):
     print(response)
 
     assert response.id == 'ord_840797'
+
+def test_get_order_actions(prodigi_test_client):
+    pd = Prodigi()
+    pd.httpx_client = prodigi_test_client
+    action_id = "ord_1101519"
+    actions = pd.get_order_actions(action_id)
+    assert actions.cancel.isAvailable == "No"
