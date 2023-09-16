@@ -36,11 +36,6 @@ class Prodigi:
 
     def create_order(self, order_data: Order) -> OrderResponse:
         response = self.httpx_client.post(f'/v4.0/orders', content=order_data.model_dump_json())
-        print("XXXXXXXXXXXX")
-        print(response.text)
-        print(response.status_code)
-        print("XXXXXXXXXXXX")
-
         assert response.status_code in [200, 201], "Problem creating order"
         order_response = RequestResponse(**response.json())
         assert order_response.outcome == OutcomeEnum.created, "Order was not created"
