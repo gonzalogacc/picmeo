@@ -1,5 +1,6 @@
+from datetime import datetime
 from enum import Enum
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -39,8 +40,8 @@ class VariantAttributes(BaseModel):
 
 class ProductVariant(BaseModel):
     attributes: VariantAttributes
-    shipsTo: List[ShipsToEnum]
-    printAreaSizes: VariantPrintAreaSizes
+    # shipsTo: List[ShipsToEnum]
+    # printAreaSizes: VariantPrintAreaSizes
 
 
 class ProductVariants(BaseModel):
@@ -63,9 +64,6 @@ class PrintAreaDimensions(BaseModel):
 
 class VariantPrintAreaSizes(BaseModel):
     default: PrintAreaDimensions
-
-
-
 
     #    "variants": [
     #            "printAreaSizes": {
@@ -145,36 +143,184 @@ class VariantPrintAreaSizes(BaseModel):
     # }
 
 
-class OrderOUT(BaseModel):
+class Order(BaseModel):
     pass
     # {
-    #     "shippingMethod": "Budget",
+    #     "merchantReference": "MyMerchantReference1",
+    #     "shippingMethod": "Overnight",
     #     "recipient": {
+    #         "name": "Mr Testy McTestface",
     #         "address": {
     #             "line1": "14 test place",
     #             "line2": "test",
     #             "postalOrZipCode": "12345",
     #             "countryCode": "US",
     #             "townOrCity": "somewhere",
-    #             "stateOrCounty": "somewhereelse"
-    #         },
-    #         "name": "John Testman",
-    #         "email": "jtestman@prodigi.com"
+    #             "stateOrCounty": null
+    #         }
     #     },
     #     "items": [
     #         {
-    #             "sku": "GLOBAL-FAP-16x24",
+    #             "merchantReference": "item #1",
+    #             "sku": "GLOBAL-CFPM-16X20",
     #             "copies": 1,
     #             "sizing": "fillPrintArea",
+    #             "attributes": {
+    #                 "color": "black"
+    #             },
+    #             "recipientCost": {
+    #                 "amount": "15.00",
+    #                 "currency": "USD"
+    #             },
     #             "assets": [
     #                 {
     #                     "printArea": "default",
-    #                     "url": "https://your-image-url/image.png"
+    #                     "url": "https://pwintyimages.blob.core.windows.net/samples/stars/test-sample-grey.png",
+    #                     "md5Hash": "daa1c811c6038e718a23f0d816914b7b"
     #                 }
     #             ]
     #         }
-    #     ]
+    #     ],
+    #     "metadata": {
+    #         "mycustomkey":"some-guid",
+    #         "someCustomerPreference": {
+    #             "preference1": "something",
+    #             "preference2": "red"
+    #         },
+    #         "sourceId": 12345
+    #     }
     # }
+
+
+class OrderStatusDetails(BaseModel):
+    downloadAssets: str
+    printReadyAssetsPrepared: str
+    allocateProductionLocation: str
+    inProduction: str
+    shipping: str
+
+
+class OrderStatus(BaseModel):
+    stage: str
+    issues: List[str]
+    details: OrderStatusDetails
+
+
+class MoneyAmount(BaseModel):
+    amount: str
+    currency: str
+
+
+class OrderCostItem(BaseModel):
+    id: str
+    itemId: Optional[str]
+    cost: MoneyAmount
+    shipmentId: Optional[str] = None
+    chargeType: str
+
+
+class OrderCharge(BaseModel):
+    id: str
+    prodigiInvoiceNumber: Optional[str]
+    totalCost: MoneyAmount
+    totalTax: MoneyAmount
+    items: List[OrderCostItem]
+
+
+class OrderCarrier(BaseModel):
+    name: str
+    service: str
+
+
+class OrderFulfillmentLocation(BaseModel):
+    countryCode: str
+    labCode: str
+
+
+class OrderTracking(BaseModel):
+    number: str
+    url: str
+
+
+class OrderShipment(BaseModel):
+    id: str
+    dispatchDate: datetime
+    carrier: OrderCarrier
+    fulfillmentLocation: OrderFulfillmentLocation
+    tracking: OrderTracking
+    items: List[dict]
+    status: str
+
+
+class Address(BaseModel):
+    line1: str
+    line2: str
+    postalOrZipCode: str
+    countryCode: str
+    townOrCity: str
+    stateOrCounty: Optional[str] = None
+
+
+class Recipient(BaseModel):
+    name: str
+    email: Optional[str] = None
+    phoneNumber: Optional[str] = None
+    address: Address
+
+
+class ItemAttributes(BaseModel):
+    color: "str"
+
+
+class ItemAsset(BaseModel):
+    id: str
+    printArea: str
+    md5Hash: str
+    url: str
+    thumbnailUrl: str
+    status: str
+
+
+class Item(BaseModel):
+    id: str
+    status: str
+    merchantReference: str
+    sku: str
+    copies: int
+    sizing: str
+    thumbnailUrl: str
+    attributes: ItemAttributes
+    assets: List[ItemAsset]
+    recipientCost: MoneyAmount
+    correlationIdentifier: str
+
+
+class OrderMetadata(BaseModel):
+    mycustomkey: str
+    someCustomerPreference: dict
+
+
+class OrderResponse(BaseModel):
+    id: str
+    created: datetime
+    lastUpdated: datetime
+    callbackUrl: Optional[str] = None
+    merchantReference: Optional[str]
+    shippingMethod: str
+    idempotencyKey: Optional[str] = None
+    status: OrderStatus
+    charges: List[OrderCharge]
+    shipments: List[OrderShipment]
+    recipient: Recipient
+    items: List[Item]
+    packingSlip: Optional[str] = None
+    metadata: OrderMetadata
+
+
+class RequestResponse(BaseModel):
+    outcome: str
+    order: OrderResponse
+    traceParent: str
 
 
 class OrderIN(BaseModel):

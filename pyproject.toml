@@ -10,6 +10,9 @@ python = "^3.9"
 pydantic = "^2.3.0"
 httpx = "^0.24.1"
 pytest = "^7.4.1"
+fastapi = "^0.103.1"
+pydantic-settings = "^2.0.3"
+python-dotenv = "^1.0.0"
 
 
 [build-system]
