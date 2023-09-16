@@ -15,10 +15,10 @@ def _response_from_file(filename: str) -> JSONResponse:
 
 
 def get_orders_dummy(request: Request):
-    return _response_from_file('./prodigi_sample_responses/get_orders.txt')
+    return _response_from_file('prodigi_sample_responses/get_orders.json')
 
 def get_order_dummy(request: Request):
-    return _response_from_file('./prodigi_sample_responses/get_order_ord_1101519.txt')
+    return _response_from_file('prodigi_sample_responses/get_order_ord_1101519.json')
 
 @pytest.fixture(scope="session")
 def prodigi_test_client():

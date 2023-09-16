@@ -92,7 +92,7 @@ class OrderIssue(BaseModel):
 
 class OrderStatus(BaseModel):
     stage: StatusEnum
-    issues: List[str]
+    issues: List[dict]
     details: OrderStatusDetails
 
 
@@ -134,10 +134,10 @@ class OrderTracking(BaseModel):
 
 class OrderShipment(BaseModel):
     id: str
-    dispatchDate: datetime
+    dispatchDate: Optional[datetime]
     carrier: OrderCarrier
     fulfillmentLocation: OrderFulfillmentLocation
-    tracking: OrderTracking
+    tracking: Optional[OrderTracking]
     items: List[dict]
     status: str
 
@@ -161,14 +161,15 @@ class Recipient(BaseModel):
 class ItemAsset(BaseModel):
     id: str
     printArea: str
-    md5Hash: str
+    md5Hash: Optional[str]
     url: str
-    thumbnailUrl: str
+    thumbnailUrl: Optional[str]
     status: str
 
 
 class ItemGeneralStatusEnum(str, Enum):
     ok = 'Ok'
+    invalid = 'Invalid'
 
 
 class SizingEnum(str, Enum):
@@ -180,14 +181,14 @@ class SizingEnum(str, Enum):
 class Item(BaseModel):
     id: str
     status: ItemGeneralStatusEnum
-    merchantReference: str
+    merchantReference: Optional[str]
     sku: str
     copies: int
     sizing: SizingEnum
-    thumbnailUrl: str
+    thumbnailUrl: Optional[str]
     attributes: dict
     assets: List[ItemAsset]
-    recipientCost: MoneyAmount
+    recipientCost: Optional[MoneyAmount]
     correlationIdentifier: str
 
 
@@ -227,7 +228,7 @@ class OrderResponse(BaseModel):
     recipient: Recipient
     items: List[Item]
     packingSlip: Optional[PackingSlip] = None
-    metadata: OrderMetadata
+    metadata: Optional[OrderMetadata]
 
 
 class OutcomeEnum(str, Enum):

@@ -30,9 +30,9 @@ class Prodigi:
 
     def get_orders(self) -> List[OrderResponse]:
         response = self.httpx_client.get('/v4/orders')
-        print(response)
+        print(response.json()['orders'])
         assert response.status_code in [200], "Error getting orders"
-        return [OrderResponse(**r) for r in response.json()]
+        return [OrderResponse(**r) for r in response.json()['orders']]
 
     def product_details(self, product_code: str):
         """ Get the product details for a particular product code
