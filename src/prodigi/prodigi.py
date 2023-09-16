@@ -3,7 +3,8 @@ from typing import List
 import httpx
 
 from src.prodigi.settings import Settings
-from src.prodigi.schema import OrderResponse, RequestResponse, Order, OutcomeEnum, OrderActionsResponse
+from src.prodigi.schema import OrderResponse, RequestResponse, Order, OutcomeEnum, OrderActionsResponse, \
+    CancelOrderResponse
 
 PRODIGI_API_KEY = Settings.PRODIGI_API_KEY
 PRODIGI_BASE_URL = Settings.PRODIGI_BASE_URL
@@ -41,15 +42,22 @@ class Prodigi:
         assert order_response.outcome == OutcomeEnum.created, "Order was not created"
         return order_response.order
 
-    def get_order_actions(self, order_id: str):
+    def get_order_actions(self, order_id: str) -> OrderActionsResponse:
         response = self.httpx_client.get(f'/v4.0/orders/{order_id}/actions')
         assert response.status_code in [200,], "Problem reading actions"
         order_actions = OrderActionsResponse(**response.json())
         assert order_actions.outcome == OutcomeEnum.ok, f"Problem reading actions: {order_actions.outcome}"
         return order_actions
 
-    def cancel_order(self, order_id: str):
-        return None
+
+    def cancel_order(self, order_id: str) -> CancelOrderResponse:
+        response = self.httpx_client.post(f'/v4.0/orders/{order_id}/actions/cancel')
+        print(response.text)
+        print(response.status_code)
+        assert response.status_code in [200,], "problem deleting order"
+        order_cancel = CancelOrderResponse(**response.json())
+        assert order_cancel.outcome == OutcomeEnum.cancelled, f"Probelem cancelling order {order_cancel.outcome}"
+        return order_cancel
 
     def product_details(self, product_code: str):
         """ Get the product details for a particular product code

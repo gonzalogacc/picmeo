@@ -224,6 +224,8 @@ class OutcomeEnum(str, Enum):
     ok = 'Ok'
     created = 'Created'
     validation_failed = 'ValidationFailed'
+    cancelled = "Cancelled"
+    action_not_available = 'ActionNotAvailable'
 
 
 class Order(BaseModel):
@@ -268,4 +270,10 @@ class OrderActionsResponse(BaseModel):
     changeRecipientDetails: IsAvailable
     changeShippingMethod: IsAvailable
     changeMetaData: IsAvailable
+    traceParent: str
+
+
+class CancelOrderResponse(BaseModel):
+    outcome: OutcomeEnum
+    order: OrderResponse
     traceParent: str

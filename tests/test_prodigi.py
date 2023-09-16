@@ -1,6 +1,6 @@
 from src.prodigi.prodigi import Prodigi
 from src.prodigi.schema import Order, ShippingMethodEnum, Recipient, Address, Item, SizingEnum, MoneyAmount, ItemAsset, \
-    OrderMetadata
+    OrderMetadata, OutcomeEnum
 from tests.schema_fixtures import prodigi_test_client
 
 
@@ -82,3 +82,10 @@ def test_get_order_actions(prodigi_test_client):
     action_id = "ord_1101519"
     actions = pd.get_order_actions(action_id)
     assert actions.cancel.isAvailable == "No"
+
+def test_cancel_order_action(prodigi_test_client):
+    pd = Prodigi()
+    pd.httpx_client = prodigi_test_client
+    order_id = "ord_1101519"
+    action = pd.cancel_order(order_id)
+    assert action.outcome == OutcomeEnum.cancelled
