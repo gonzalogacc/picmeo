@@ -20,7 +20,7 @@ def test_get_order(prodigi_test_client):
 
 def test_get_all_orders(prodigi_test_client):
     pd = Prodigi()
-    # pd.httpx_client = prodigi_test_client
+    pd.httpx_client = prodigi_test_client
     response = pd.get_orders()
     print(response)
     print(len(response))
