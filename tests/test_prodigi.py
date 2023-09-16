@@ -20,4 +20,4 @@ def test_get_order(prodigi_test_client):
     order_id = 'ord_1101519'
     order = pd.get_order(order_id)
     print(order)
-    assert order.id == order_id
+    assert order.order.id == order_id
