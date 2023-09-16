@@ -144,7 +144,7 @@ class OrderShipment(BaseModel):
 
 class Address(BaseModel):
     line1: str
-    line2: str
+    line2: Optional[str] = ''
     postalOrZipCode: str
     countryCode: str
     townOrCity: str
@@ -159,12 +159,15 @@ class Recipient(BaseModel):
 
 
 class ItemAsset(BaseModel):
-    id: str
     printArea: str
     md5Hash: Optional[str]
     url: str
-    thumbnailUrl: Optional[str]
-    status: str
+    thumbnailUrl: Optional[str] = None
+    status: Optional[str] = None
+
+
+class ItemAssetResponse(ItemAsset):
+    id: str
 
 
 class ItemGeneralStatusEnum(str, Enum):
@@ -179,17 +182,20 @@ class SizingEnum(str, Enum):
 
 
 class Item(BaseModel):
-    id: str
-    status: ItemGeneralStatusEnum
     merchantReference: Optional[str]
     sku: str
     copies: int
     sizing: SizingEnum
-    thumbnailUrl: Optional[str]
+    thumbnailUrl: Optional[str] = None
     attributes: dict
-    assets: List[ItemAsset]
+    assets: List[ItemAsset | ItemAssetResponse]
     recipientCost: Optional[MoneyAmount]
-    correlationIdentifier: str
+    correlationIdentifier: Optional[str] = None
+
+
+class ItemResponse(Item):
+    id: str
+    status: ItemGeneralStatusEnum
 
 
 class OrderMetadata(BaseModel):
@@ -215,26 +221,26 @@ class PackingSlip(BaseModel):
 
 
 class OutcomeEnum(str, Enum):
-    ok = "Ok"
-
+    ok = 'Ok'
+    created = 'Created'
+    validation_failed = 'ValidationFailed'
 
 class Order(BaseModel):
-
     merchantReference: Optional[str] = None
     shippingMethod: ShippingMethodEnum
     idempotencyKey: Optional[str] = None
-    status: OrderStatus
-    charges: List[OrderCharge]
-    shipments: List[OrderShipment]
     recipient: Recipient
-    items: List[Item]
+    items: List[Item | ItemResponse]
     packingSlip: Optional[PackingSlip] = None
     metadata: Optional[OrderMetadata]
 
 
 class OrderResponse(Order):
     id: str
+    status: OrderStatus
+    charges: List[OrderCharge]
     created: datetime
+    shipments: List[OrderShipment]
     lastUpdated: datetime
     callbackUrl: Optional[Callback] = None
 

@@ -20,11 +20,15 @@ def get_orders_dummy(request: Request):
 def get_order_dummy(request: Request):
     return _response_from_file('prodigi_sample_responses/get_order_ord_1101519.json')
 
+def post_order_dummy(request: Request):
+    return _response_from_file('prodigi_sample_responses/create_order_ord.json')
+
 @pytest.fixture(scope="session")
 def prodigi_test_client():
     app = Starlette(routes=[
-        Route('/v4/orders', get_orders_dummy),
+        # Route('/v4/orders', get_orders_dummy),
         Route('/v4/orders/{order_id:str}', get_order_dummy),
+        Route('/v4/orders', post_order_dummy, methods=['POST']),
     ])
     return TestClient(app)
 

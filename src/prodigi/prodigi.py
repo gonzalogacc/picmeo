@@ -3,7 +3,7 @@ from typing import List
 import httpx
 
 from src.prodigi.settings import Settings
-from src.prodigi.schema import OrderResponse, RequestResponse
+from src.prodigi.schema import OrderResponse, RequestResponse, Order, OutcomeEnum
 
 PRODIGI_API_KEY = Settings.PRODIGI_API_KEY
 PRODIGI_BASE_URL = Settings.PRODIGI_BASE_URL
@@ -24,15 +24,27 @@ class Prodigi:
         )
 
     def get_order(self, order_id: str) -> RequestResponse:
-        response = self.httpx_client.get(f'/v4/orders/{order_id}')
+        response = self.httpx_client.get(f'/v4.0/orders/{order_id}')
         assert response.status_code in [200], "Error getting orders"
         return RequestResponse(**response.json())
 
     def get_orders(self) -> List[OrderResponse]:
-        response = self.httpx_client.get('/v4/orders')
+        response = self.httpx_client.get('/v4.0/orders')
         print(response.json()['orders'])
         assert response.status_code in [200], "Error getting orders"
         return [OrderResponse(**r) for r in response.json()['orders']]
+
+    def create_order(self, order_data: Order) -> OrderResponse:
+        response = self.httpx_client.post(f'/v4.0/orders', content=order_data.model_dump_json())
+        print("XXXXXXXXXXXX")
+        print(response.text)
+        print(response.status_code)
+        print("XXXXXXXXXXXX")
+
+        assert response.status_code in [200, 201], "Problem creating order"
+        order_response = RequestResponse(**response.json())
+        assert order_response.outcome == OutcomeEnum.created, "Order was not created"
+        return order_response.order
 
     def product_details(self, product_code: str):
         """ Get the product details for a particular product code
