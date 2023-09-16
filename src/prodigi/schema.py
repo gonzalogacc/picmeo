@@ -62,18 +62,32 @@ class VariantPrintAreaSizes(BaseModel):
     default: PrintAreaDimensions
 
 
+class StatusDetailsStatusEnum(str, Enum):
+    not_started = 'NotStarted'
+    in_progress = 'InProgress'
+    complete = 'Complete'
+    error = 'Error'
+
+
 class OrderStatusDetails(BaseModel):
-    downloadAssets: str
-    printReadyAssetsPrepared: str
-    allocateProductionLocation: str
-    inProduction: str
-    shipping: str
+    downloadAssets: StatusDetailsStatusEnum
+    printReadyAssetsPrepared: StatusDetailsStatusEnum
+    allocateProductionLocation: StatusDetailsStatusEnum
+    inProduction: StatusDetailsStatusEnum
+    shipping: StatusDetailsStatusEnum
 
 
 class StatusEnum(str, Enum):
     in_progress = 'InProgress'
     complete = 'Complete'
     cancelled = 'Cancelled'
+
+
+class OrderIssue(BaseModel):
+    objectId: str
+    errorCode: str
+    description: str
+    authorisationDetails: str
 
 
 class OrderStatus(BaseModel):
@@ -144,10 +158,6 @@ class Recipient(BaseModel):
     address: Address
 
 
-class ItemAttributes(BaseModel):
-    color: "str"
-
-
 class ItemAsset(BaseModel):
     id: str
     printArea: str
@@ -157,15 +167,25 @@ class ItemAsset(BaseModel):
     status: str
 
 
+class ItemGeneralStatusEnum(str, Enum):
+    ok = 'Ok'
+
+
+class SizingEnum(str, Enum):
+    fill_print_area = 'fillPrintArea'
+    fit_print_area = 'fitPrintArea'
+    stretch_to_print_area = 'stretchToPrintArea'
+
+
 class Item(BaseModel):
     id: str
-    status: str
+    status: ItemGeneralStatusEnum
     merchantReference: str
     sku: str
     copies: int
-    sizing: str
+    sizing: SizingEnum
     thumbnailUrl: str
-    attributes: ItemAttributes
+    attributes: dict
     assets: List[ItemAsset]
     recipientCost: MoneyAmount
     correlationIdentifier: str
@@ -188,6 +208,11 @@ class ShippingMethodEnum(str, Enum):
     overnight = 'Overnight'
 
 
+class PackingSlip(BaseModel):
+    url: str
+    status: str
+
+
 class OrderResponse(BaseModel):
     id: str
     created: datetime
@@ -201,7 +226,7 @@ class OrderResponse(BaseModel):
     shipments: List[OrderShipment]
     recipient: Recipient
     items: List[Item]
-    packingSlip: Optional[str] = None
+    packingSlip: Optional[PackingSlip] = None
     metadata: OrderMetadata
 
 
