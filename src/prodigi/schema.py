@@ -214,11 +214,12 @@ class PackingSlip(BaseModel):
     status: str
 
 
-class OrderResponse(BaseModel):
-    id: str
-    created: datetime
-    lastUpdated: datetime
-    callbackUrl: Optional[Callback] = None
+class OutcomeEnum(str, Enum):
+    ok = "Ok"
+
+
+class Order(BaseModel):
+
     merchantReference: Optional[str] = None
     shippingMethod: ShippingMethodEnum
     idempotencyKey: Optional[str] = None
@@ -231,15 +232,14 @@ class OrderResponse(BaseModel):
     metadata: Optional[OrderMetadata]
 
 
-class OutcomeEnum(str, Enum):
-    ok = "Ok"
+class OrderResponse(Order):
+    id: str
+    created: datetime
+    lastUpdated: datetime
+    callbackUrl: Optional[Callback] = None
 
 
 class RequestResponse(BaseModel):
     outcome: OutcomeEnum
     order: OrderResponse
     traceParent: str
-
-
-class OrderIN(BaseModel):
-    pass
