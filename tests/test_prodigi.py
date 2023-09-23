@@ -1,5 +1,5 @@
 from src.prodigi.prodigi import Prodigi
-from src.prodigi.schema import Order, ShippingMethodEnum, Recipient, Address, Item, SizingEnum, MoneyAmount, ItemAsset, \
+from src.prodigi.schema import OrderBase, ShippingMethodEnum, Recipient, Address, Item, SizingEnum, MoneyAmount, ItemAsset, \
     OrderMetadata, OutcomeEnum
 from tests.schema_fixtures import prodigi_test_client
 
@@ -63,7 +63,7 @@ def test_create_order(prodigi_test_client):
             sourceId=12345
         )
     )
-    order_data = Order(
+    order_data = OrderBase(
         merchantReference="MyMerchantReference1",
         shippingMethod=ShippingMethodEnum.overnight,
         recipient=recipient,
@@ -89,3 +89,6 @@ def test_cancel_order_action(prodigi_test_client):
     order_id = "ord_1101519"
     action = pd.cancel_order(order_id)
     assert action.outcome == OutcomeEnum.cancelled
+
+def get_product_details(prodigi_test_client):
+    pass

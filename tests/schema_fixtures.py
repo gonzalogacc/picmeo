@@ -32,7 +32,7 @@ def post_order_action_cancel_dummy(request: Request):
 @pytest.fixture(scope="session")
 def prodigi_test_client():
     app = Starlette(routes=[
-        # Route('/v4.0/orders', get_orders_dummy),
+        Route('/v4.0/orders', get_orders_dummy),
         Route('/v4.0/orders/{order_id:str}', get_order_dummy),
         Route('/v4.0/orders', post_order_dummy, methods=['POST']),
         Route('/v4.0/orders/{order_id:str}/actions', get_order_actions_dummy),

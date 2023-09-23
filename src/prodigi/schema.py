@@ -5,6 +5,19 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 
+class OutcomeEnum(str, Enum):
+    ok = 'Ok'
+    created = 'Created'
+    validation_failed = 'ValidationFailed'
+    cancelled = "Cancelled"
+    action_not_available = 'ActionNotAvailable'
+
+
+class ResposeCommon(BaseModel):
+    outcome: OutcomeEnum
+    traceParent: str
+
+
 class ProductDimensions(BaseModel):
     width: float
     height: float
@@ -220,15 +233,7 @@ class PackingSlip(BaseModel):
     status: str
 
 
-class OutcomeEnum(str, Enum):
-    ok = 'Ok'
-    created = 'Created'
-    validation_failed = 'ValidationFailed'
-    cancelled = "Cancelled"
-    action_not_available = 'ActionNotAvailable'
-
-
-class Order(BaseModel):
+class OrderBase(BaseModel):
     merchantReference: Optional[str] = None
     shippingMethod: ShippingMethodEnum
     idempotencyKey: Optional[str] = None
@@ -238,7 +243,7 @@ class Order(BaseModel):
     metadata: Optional[OrderMetadata]
 
 
-class OrderResponse(Order):
+class Order(OrderBase):
     id: str
     status: OrderStatus
     charges: List[OrderCharge]
@@ -248,10 +253,12 @@ class OrderResponse(Order):
     callbackUrl: Optional[Callback] = None
 
 
-class RequestResponse(BaseModel):
-    outcome: OutcomeEnum
-    order: OrderResponse
-    traceParent: str
+class ListOrderResponse(ResposeCommon):
+    orders: List[Order]
+
+
+class RequestResponse(ResposeCommon):
+    order: Order
 
 
 class YesNoEnum(str, Enum):
@@ -264,16 +271,12 @@ class IsAvailable(BaseModel):
     isAvailable: YesNoEnum
 
 
-class OrderActionsResponse(BaseModel):
-    outcome: OutcomeEnum
+class OrderActionsResponse(ResposeCommon):
     cancel: IsAvailable
     changeRecipientDetails: IsAvailable
     changeShippingMethod: IsAvailable
     changeMetaData: IsAvailable
-    traceParent: str
 
 
-class CancelOrderResponse(BaseModel):
-    outcome: OutcomeEnum
-    order: OrderResponse
-    traceParent: str
+class CancelOrderResponse(ResposeCommon):
+    order: Order
