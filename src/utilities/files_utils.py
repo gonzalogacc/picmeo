@@ -1,3 +1,4 @@
+import hashlib
 import os
 import sys
 import urllib.parse
@@ -30,10 +31,11 @@ def upload_blob(source_file_name: str):
 
     BASE_URL = "https://storage.googleapis.com"
     url_path = f'{Settings.BUCKET_NAME}/{destination_blob_name}'
-    return urllib.parse.urljoin(BASE_URL, url_path)
+    md5sum = hashlib.md5(image).hexdigest()
+    return urllib.parse.urljoin(BASE_URL, url_path), md5sum
 
 
 if __name__ == "__main__":
     print(f'Uploading file')
-    rta = upload_blob(sys.argv[1])
-    print(f'File uploaded to: {rta}')
+    image_url, md5 = upload_blob(sys.argv[1])
+    print(f'File uploaded to: {image_url} : {md5}')
