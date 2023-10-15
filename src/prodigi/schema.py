@@ -13,7 +13,7 @@ class OutcomeEnum(str, Enum):
     action_not_available = 'ActionNotAvailable'
 
 
-class ResposeCommon(BaseModel):
+class ResponseCommon(BaseModel):
     outcome: OutcomeEnum
     traceParent: str
 
@@ -153,6 +153,7 @@ class OrderShipment(BaseModel):
     tracking: Optional[OrderTracking]
     items: List[dict]
     status: str
+    cost: Optional[MoneyAmount]
 
 
 class Address(BaseModel):
@@ -253,11 +254,11 @@ class Order(OrderBase):
     callbackUrl: Optional[Callback] = None
 
 
-class ListOrderResponse(ResposeCommon):
+class ListOrderResponse(ResponseCommon):
     orders: List[Order]
 
 
-class RequestResponse(ResposeCommon):
+class RequestResponse(ResponseCommon):
     order: Order
 
 
@@ -271,12 +272,24 @@ class IsAvailable(BaseModel):
     isAvailable: YesNoEnum
 
 
-class OrderActionsResponse(ResposeCommon):
+class OrderActionsResponse(ResponseCommon):
     cancel: IsAvailable
     changeRecipientDetails: IsAvailable
     changeShippingMethod: IsAvailable
     changeMetaData: IsAvailable
 
 
-class CancelOrderResponse(ResposeCommon):
+class CancelOrderResponse(ResponseCommon):
     order: Order
+
+
+class CostSummary(BaseModel):
+    cost: MoneyAmount
+    shipping: MoneyAmount
+
+
+class Quote(BaseModel):
+    shipmentMethod: ShippingMethodEnum
+    costSummary: CostSummary
+    shipments: OrderShipment
+    items: Item

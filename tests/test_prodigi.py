@@ -94,5 +94,8 @@ def test_cancel_order_action(prodigi_test_client):
     assert action.outcome == OutcomeEnum.cancelled
 
 
-def get_product_details(prodigi_test_client):
-    pass
+def get_quote(prodigi_test_client):
+    pd = Prodigi()
+    pd.httpx_client = prodigi_test_client
+    response = pd.get_quote()
+    assert response.outcome == "Created"
