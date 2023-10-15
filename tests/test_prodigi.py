@@ -16,7 +16,7 @@ def test_get_order(prodigi_test_client):
     order_id = 'ord_1101519'
     order = pd.get_order(order_id)
     print(order)
-    assert order.order.id == order_id
+    assert order.id == order_id
 
 
 def test_get_all_orders(prodigi_test_client):
@@ -69,7 +69,7 @@ def test_create_order(prodigi_test_client):
         shippingMethod=ShippingMethodEnum.overnight,
         recipient=recipient,
         items=[item],
-        metadata=order_metadata
+        # metadata=order_metadata
     )
 
     response = pd.create_order(order_data)

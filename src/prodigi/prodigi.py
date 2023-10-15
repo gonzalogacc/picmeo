@@ -3,7 +3,7 @@ from typing import List
 import httpx
 
 from src.prodigi.settings import Settings
-from src.prodigi.schema import Order, RequestResponse, OrderBase, OutcomeEnum, OrderActionsResponse, \
+from src.prodigi.schema import Order, OrderRequestResponse, OrderBase, OutcomeEnum, OrderActionsResponse, \
     CancelOrderResponse, ListOrderResponse
 
 PRODIGI_API_KEY = Settings.PRODIGI_API_KEY
@@ -24,21 +24,21 @@ class Prodigi:
             }
         )
 
-    def get_order(self, order_id: str) -> RequestResponse:
+    def get_order(self, order_id: str) -> Order:
         response = self.httpx_client.get(f'/v4.0/orders/{order_id}')
         assert response.status_code in [200], "Error getting orders"
-        return RequestResponse(**response.json())
+        print(response.json())
+        return OrderRequestResponse(**response.json()).order
 
-    def get_orders(self) -> ListOrderResponse:
+    def get_orders(self) -> List[Order]:
         response = self.httpx_client.get('/v4.0/orders')
-        print(response.text)
         assert response.status_code in [200], "Error getting orders"
-        return [Order(**r) for r in response.json()['orders']]
+        return ListOrderResponse(**response.json()).orders
 
     def create_order(self, order_data: OrderBase) -> Order:
         response = self.httpx_client.post(f'/v4.0/orders', content=order_data.model_dump_json())
-        assert response.status_code in [200, 201], "Problem creating order"
-        order_response = RequestResponse(**response.json())
+        assert response.status_code in [200, 201], f"Problem creating order {response.text}"
+        order_response = OrderRequestResponse(**response.json())
         assert order_response.outcome == OutcomeEnum.created, "Order was not created"
         return order_response.order
 
@@ -51,35 +51,14 @@ class Prodigi:
 
     def cancel_order(self, order_id: str) -> CancelOrderResponse:
         response = self.httpx_client.post(f'/v4.0/orders/{order_id}/actions/cancel')
-        print(response.text)
-        print(response.status_code)
         assert response.status_code in [200, ], "problem deleting order"
         order_cancel = CancelOrderResponse(**response.json())
         assert order_cancel.outcome == OutcomeEnum.cancelled, f"Probelem cancelling order {order_cancel.outcome}"
         return order_cancel
-
-    def update_shipping_method(self):
-        raise NotImplemented()
-
-    def update_recipient(self):
-        raise NotImplemented()
-
-    def update_metadata(self):
-        raise NotImplemented()
-
-    def product_details(self, product_code: str):
-        """ Get the product details for a particular product code
-        :param product_code:
-        :return:
-        """
-        pass
 
     def upload_image(self):
         """
         Upload the image to a bucket and makes it available for prodigy to download
         :return:
         """
-        pass
-
-    def place_order(self):
         pass

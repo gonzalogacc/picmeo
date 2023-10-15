@@ -7,7 +7,7 @@ import uuid
 from google.cloud import storage
 from google.oauth2 import service_account
 
-from settings import Settings
+from src.utilities.settings import Settings
 
 credentials = service_account.Credentials.from_service_account_file(Settings.GOOGLE_CREDS)
 

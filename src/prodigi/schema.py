@@ -196,7 +196,7 @@ class SizingEnum(str, Enum):
 
 class Item(BaseModel):
     merchantReference: Optional[str]
-    sku: str
+    sku: str = 'GLOBAL-FAP-A5'
     copies: int
     sizing: SizingEnum
     thumbnailUrl: Optional[str] = None
@@ -235,30 +235,28 @@ class PackingSlip(BaseModel):
 
 class OrderBase(BaseModel):
     merchantReference: Optional[str] = None
-    shippingMethod: ShippingMethodEnum
-    idempotencyKey: Optional[str] = None
+    shippingMethod: ShippingMethodEnum = ShippingMethodEnum.budget
     recipient: Recipient
     items: List[Item | ItemResponse]
-    packingSlip: Optional[PackingSlip] = None
-    metadata: Optional[OrderMetadata]
+    # metadata: Optional[OrderMetadata]
+    idempotencyKey: Optional[str] = None
 
 
 class Order(OrderBase):
     id: str
-    status: OrderStatus
-    charges: List[OrderCharge]
     created: datetime
-    shipments: List[OrderShipment]
     lastUpdated: datetime
     callbackUrl: Optional[Callback] = None
+    status: OrderStatus
     charges: List[OrderCharge]
+    shipments: List[OrderShipment]
 
 
 class ListOrderResponse(ResponseCommon):
     orders: List[Order]
 
 
-class RequestResponse(ResponseCommon):
+class OrderRequestResponse(ResponseCommon):
     order: Order
 
 
