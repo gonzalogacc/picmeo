@@ -153,7 +153,6 @@ class OrderShipment(BaseModel):
     tracking: Optional[OrderTracking]
     items: List[dict]
     status: str
-    cost: Optional[MoneyAmount]
 
 
 class Address(BaseModel):
@@ -252,6 +251,7 @@ class Order(OrderBase):
     shipments: List[OrderShipment]
     lastUpdated: datetime
     callbackUrl: Optional[Callback] = None
+    charges: List[OrderCharge]
 
 
 class ListOrderResponse(ResponseCommon):
