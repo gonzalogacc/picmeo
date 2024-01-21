@@ -1,8 +1,13 @@
 from datetime import datetime
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Union
 
 from pydantic import BaseModel, Field
 
+class MissingParametersException(Exception):
+    ...
+
+class VerificationException(Exception):
+    ...
 
 class Contact(BaseModel):
     wa_id: str
@@ -152,7 +157,7 @@ class Value(BaseModel):
     contacts: List[Contact]
     errors: Optional[Dict]  # Implement
     messaging_product: str
-    messages: List[TextMessage | ImageMessage | ReactionMessage | StickerMessage | LocationMessage | ContactMessage | AudioMessage]
+    messages: Union[TextMessage, ImageMessage, ReactionMessage, StickerMessage, LocationMessage, ContactMessage, AudioMessage]
     metadata: dict
     statuses: Optional[dict]
 
