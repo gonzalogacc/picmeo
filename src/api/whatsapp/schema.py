@@ -32,7 +32,7 @@ class ReferredProduct(BaseModel):
 class Context(BaseModel):
     forwarded: bool
     frequently_forwarded: Optional[bool]
-    _from: str = Field(alias="from")
+    from_: str = Field(alias="from")
     id: str
     referred_product: Optional[ReferredProduct]
 
