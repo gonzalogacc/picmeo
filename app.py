@@ -22,6 +22,6 @@ app.add_middleware(
 whatsapp_client = WhatsappClient()
 app.include_router(whatsapp_client.router)
 
-# @app.get("/")
-# def index():
-#     return "OK"
+@app.get("/")
+def index():
+    return "OK"
