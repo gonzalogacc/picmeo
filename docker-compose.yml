@@ -4,8 +4,5 @@ services:
     build: .
     ports:
       - 8080:8080
-    develop:
-      watch:
-        - action: sync+restart
-          path: .
-          target: /app/picmeo
+    volumes:
+      - ./src:/app/picmeo/src
