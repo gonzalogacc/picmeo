@@ -121,6 +121,7 @@ class MessageBase(BaseModel):
 
 
 class TextMessage(MessageBase):
+    # test_ping_message = {'object': 'whatsapp_business_account', 'entry': [{'id': '104246805978102', 'changes': [{'value': {'messaging_product': 'whatsapp', 'metadata': {'display_phone_number': '34623508545', 'phone_number_id': '102033176202052'}, 'contacts': [{'profile': {'name': 'Gonza'}, 'wa_id': '447472138610'}], 'messages': [{'from': '447472138610', 'id': 'wamid.HBgMNDQ3NDcyMTM4NjEwFQIAEhgUM0ExNzRFRTcyRDc3MTAzNjM3RkEA', 'timestamp': '1705880589', 'text': {'body': 'ping'}, 'type': 'text'}]}, 'field': 'messages'}]}]}
     text: Text
 
 
@@ -155,11 +156,11 @@ class ContactMessage(MessageBase):
 
 class Value(BaseModel):
     contacts: List[Contact]
-    errors: Optional[Dict]  # Implement
+    errors: Optional[str] = None  # Implement
     messaging_product: str
-    messages: Union[TextMessage, ImageMessage, ReactionMessage, StickerMessage, LocationMessage, ContactMessage, AudioMessage]
+    messages: List[Union[TextMessage, ImageMessage, ReactionMessage, StickerMessage, LocationMessage, ContactMessage, AudioMessage]]
     metadata: dict
-    statuses: Optional[dict]
+    statuses: Optional[dict] = None
 
 
 class Change(BaseModel):

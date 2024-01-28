@@ -224,6 +224,13 @@ location_message = {
 
 audio_message = {}
 
+## Messages coming from the real webhook
+test_ping_message = {'object': 'whatsapp_business_account', 'entry': [{'id': '104246805978102', 'changes': [{'value': {'messaging_product': 'whatsapp', 'metadata': {'display_phone_number': '34623508545', 'phone_number_id': '102033176202052'}, 'contacts': [{'profile': {'name': 'Gonza'}, 'wa_id': '447472138610'}], 'messages': [{'from': '447472138610', 'id': 'wamid.HBgMNDQ3NDcyMTM4NjEwFQIAEhgUM0ExNzRFRTcyRDc3MTAzNjM3RkEA', 'timestamp': '1705880589', 'text': {'body': 'ping'}, 'type': 'text'}]}, 'field': 'messages'}]}]}
+
+
+def test_text_message():
+    wm = WebHookNotification(**test_ping_message)
+    assert wm.object == "whatsapp_business_account"
 
 def test_text_message():
     wm = WebHookNotification(**text_message)
