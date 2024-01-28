@@ -57,10 +57,10 @@ class Identity(BaseModel):
 
 
 class Image(BaseModel):
-    caption: str
-    sha256: str
     id: str
+    caption: Optional[str] = None
     mime_type: str
+    sha256: str
 
 
 class Interactive(BaseModel):
@@ -163,10 +163,10 @@ class Value(BaseModel):
     messaging_product: str
     metadata: dict
     contacts: List[Contact]
-    # messages: List[AudioMessage]
+    # messages: List[ImageMessage]
     messages: List[Union[AudioMessage, TextMessage, ImageMessage, ReactionMessage, StickerMessage, LocationMessage, ContactMessage]]
-    # errors: Optional[str] = None  # Implement
-    # statuses: Optional[dict] = None
+    errors: Optional[str] = None  # Implement
+    statuses: Optional[dict] = None
 
 
 class Change(BaseModel):
