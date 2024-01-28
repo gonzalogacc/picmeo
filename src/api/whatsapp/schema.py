@@ -1,22 +1,20 @@
 from datetime import datetime
 from typing import List, Optional, Dict, Union
+from typing_extensions import Annotated
+from pydantic import BaseModel, Field, BeforeValidator
 
-from pydantic import BaseModel, Field
 
 class MissingParametersException(Exception):
     ...
 
+
 class VerificationException(Exception):
     ...
+
 
 class Contact(BaseModel):
     wa_id: str
     profile: dict
-
-
-class AudioMessage(BaseModel):
-    id: str
-    mime_type: str
 
 
 class Button(BaseModel):
@@ -113,11 +111,27 @@ class Location(BaseModel):
     address: str
 
 
+def _epoch_str_parser(t: str):
+    return datetime.fromtimestamp(int(t))
+
+
+EpochDatetime = Annotated[datetime, BeforeValidator(_epoch_str_parser)]
+
+
 class MessageBase(BaseModel):
     id: str
-    timestamp: datetime
+    timestamp: EpochDatetime
     from_: str = Field(alias="from")
     type: str
+
+
+class Audio(BaseModel):
+    id: str
+    mime_type: str
+
+
+class AudioMessage(MessageBase):
+    audio: Audio
 
 
 class TextMessage(MessageBase):
@@ -127,15 +141,6 @@ class TextMessage(MessageBase):
 
 class ImageMessage(MessageBase):
     image: Image
-
-
-class Audio(MessageBase):
-    id: str
-    mime_type: str
-
-
-class AudioMessage(MessageBase):
-    audio: Audio
 
 
 class ReactionMessage(MessageBase):
@@ -155,12 +160,13 @@ class ContactMessage(MessageBase):
 
 
 class Value(BaseModel):
-    contacts: List[Contact]
-    errors: Optional[str] = None  # Implement
     messaging_product: str
-    messages: List[Union[TextMessage, ImageMessage, ReactionMessage, StickerMessage, LocationMessage, ContactMessage, AudioMessage]]
     metadata: dict
-    statuses: Optional[dict] = None
+    contacts: List[Contact]
+    # messages: List[AudioMessage]
+    messages: List[Union[AudioMessage, TextMessage, ImageMessage, ReactionMessage, StickerMessage, LocationMessage, ContactMessage]]
+    # errors: Optional[str] = None  # Implement
+    # statuses: Optional[dict] = None
 
 
 class Change(BaseModel):

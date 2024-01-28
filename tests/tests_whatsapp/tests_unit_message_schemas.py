@@ -10,230 +10,19 @@ LOCATION_LONGITUDE = 1.20
 LOCATION_NAME = "casa"
 LOCATION_ADDRESS = "juan capella 90"
 
-text_message = {
-    "object": "whatsapp_business_account",
-    "entry": [{
-        "id": "WHATSAPP_BUSINESS_ACCOUNT_ID",
-        "changes": [{
-            "value": {
-                "messaging_product": "whatsapp",
-                "metadata": {
-                    "display_phone_number": PHONE_NUMBER,
-                    "phone_number_id": PHONE_NUMBER_ID
-                },
-                "contacts": [{
-                    "profile": {
-                        "name": "NAME"
-                    },
-                    "wa_id": PHONE_NUMBER
-                }],
-                "messages": [{
-                    "from": PHONE_NUMBER,
-                    "id": "wamid.ID",
-                    "timestamp": TIMESTAMP,
-                    "text": {
-                        "body": "MESSAGE_BODY"
-                    },
-                    "type": "text"
-                }]
-            },
-            "field": "messages"
-        }]
-    }]
-}
-
-reaction_message = {
-    "object": "whatsapp_business_account",
-    "entry": [{
-        "id": "WHATSAPP_BUSINESS_ACCOUNT_ID",
-        "changes": [{
-            "value": {
-                "messaging_product": "whatsapp",
-                "metadata": {
-                    "display_phone_number": PHONE_NUMBER,
-                    "phone_number_id": PHONE_NUMBER_ID
-                },
-                "contacts": [{
-                    "profile": {
-                        "name": "NAME"
-                    },
-                    "wa_id": PHONE_NUMBER
-                }],
-                "messages": [{
-                    "from": PHONE_NUMBER,
-                    "id": "wamid.ID",
-                    "timestamp": TIMESTAMP,
-                    "reaction": {
-                        "message_id": "MESSAGE_ID",
-                        "emoji": "EMOJI"
-                    },
-                    "type": "reaction"
-                }]
-            },
-            "field": "messages"
-        }]
-    }]
-}
-
-image_message = {
-    "object": "whatsapp_business_account",
-    "entry": [{
-        "id": "WHATSAPP_BUSINESS_ACCOUNT_ID",
-        "changes": [{
-            "value": {
-                "messaging_product": "whatsapp",
-                "metadata": {
-                    "display_phone_number": PHONE_NUMBER,
-                    "phone_number_id": PHONE_NUMBER_ID
-                },
-                "contacts": [{
-                    "profile": {
-                        "name": "NAME"
-                    },
-                    "wa_id": "WHATSAPP_ID"
-                }],
-                "messages": [{
-                    "from": PHONE_NUMBER,
-                    "id": "wamid.ID",
-                    "timestamp": TIMESTAMP,
-                    "type": "image",
-                    "image": {
-                        "caption": "CAPTION",
-                        "mime_type": "image/jpeg",
-                        "sha256": "IMAGE_HASH",
-                        "id": "ID"
-                    }
-                }]
-            },
-            "field": "messages"
-        }]
-    }]
-}
-
-sticker = {
-    "object": "whatsapp_business_account",
-    "entry": [
-        {
-            "id": "ID",
-            "changes": [
-                {
-                    "value": {
-                        "messaging_product": "whatsapp",
-                        "metadata": {
-                            "display_phone_number": "PHONE_NUMBER",
-                            "phone_number_id": "PHONE_NUMBER_ID"
-                        },
-                        "contacts": [
-                            {
-                                "profile": {
-                                    "name": "NAME"
-                                },
-                                "wa_id": "ID"
-                            }
-                        ],
-                        "messages": [
-                            {
-                                "from": "SENDER_PHONE_NUMBER",
-                                "id": "wamid.ID",
-                                "timestamp": datetime.now(),
-                                "type": "sticker",
-                                "sticker": {
-                                    "mime_type": "image/webp",
-                                    "sha256": "HASH",
-                                    "id": "ID"
-                                }
-                            }
-                        ]
-                    },
-                    "field": "messages"
-                }
-            ]
-        }
-    ]
-}
-
-unknown_message = {
-    "object": "whatsapp_business_account",
-    "entry": [{
-        "id": "WHATSAPP_BUSINESS_ACCOUNT_ID",
-        "changes": [{
-            "value": {
-                "messaging_product": "whatsapp",
-                "metadata": {
-                    "display_phone_number": "PHONE_NUMBER",
-                    "phone_number_id": "PHONE_NUMBER_ID"
-                },
-                "contacts": [{
-                    "profile": {
-                        "name": "NAME"
-                    },
-                    "wa_id": "WHATSAPP_ID"
-                }],
-                "messages": [{
-                    "from": "PHONE_NUMBER",
-                    "id": "wamid.ID",
-                    "timestamp": "TIMESTAMP",
-                    "errors": [
-                        {
-                            "code": 131051,
-                            "details": "Message type is not currently supported",
-                            "title": "Unsupported message type"
-                        }],
-                    "type": "unknown"
-                }]
-            },
-            "field": "messages"
-        }],
-    }]
-}
-
-location_message = {
-    "object": "whatsapp_business_account",
-    "entry": [{
-        "id": "WHATSAPP_BUSINESS_ACCOUNT_ID",
-        "changes": [{
-            "value": {
-                "messaging_product": "whatsapp",
-                "metadata": {
-                    "display_phone_number": "PHONE_NUMBER",
-                    "phone_number_id": "PHONE_NUMBER_ID"
-                },
-                "contacts": [{
-                    "profile": {
-                        "name": "NAME"
-                    },
-                    "wa_id": "WHATSAPP_ID"
-                }],
-                "messages": [{
-                    "from": "PHONE_NUMBER",
-                    "id": "wamid.ID",
-                    "timestamp": datetime.now(),
-                    "type": "location",
-                    "location": {
-                        "latitude": LOCATION_LATITUDE,
-                        "longitude": LOCATION_LONGITUDE,
-                        "name": LOCATION_NAME,
-                        "address": LOCATION_ADDRESS,
-                    }
-                }]
-            },
-            "field": "messages"
-        }]
-    }]
-}
-
-audio_message = {}
 
 ## Messages coming from the real webhook
-test_ping_message = {'object': 'whatsapp_business_account', 'entry': [{'id': '104246805978102', 'changes': [{'value': {'messaging_product': 'whatsapp', 'metadata': {'display_phone_number': '34623508545', 'phone_number_id': '102033176202052'}, 'contacts': [{'profile': {'name': 'Gonza'}, 'wa_id': '447472138610'}], 'messages': [{'from': '447472138610', 'id': 'wamid.HBgMNDQ3NDcyMTM4NjEwFQIAEhgUM0ExNzRFRTcyRDc3MTAzNjM3RkEA', 'timestamp': '1705880589', 'text': {'body': 'ping'}, 'type': 'text'}]}, 'field': 'messages'}]}]}
+sample_text_message = {'object': 'whatsapp_business_account', 'entry': [{'id': '104246805978102', 'changes': [{'value': {'messaging_product': 'whatsapp', 'metadata': {'display_phone_number': '34623508545', 'phone_number_id': '102033176202052'}, 'contacts': [{'profile': {'name': 'Gonza'}, 'wa_id': '447472138610'}], 'messages': [{'from': '447472138610', 'id': 'wamid.HBgMNDQ3NDcyMTM4NjEwFQIAEhgUM0ExNzRFRTcyRDc3MTAzNjM3RkEA', 'timestamp': '1705880589', 'text': {'body': 'ping'}, 'type': 'text'}]}, 'field': 'messages'}]}]}
+sample_audio_message = {'object': 'whatsapp_business_account', 'entry': [{'id': '104246805978102', 'changes': [{'value': {'messaging_product': 'whatsapp', 'metadata': {'display_phone_number': '34623508545', 'phone_number_id': '102033176202052'}, 'contacts': [{'profile': {'name': 'Gonza'}, 'wa_id': '447472138610'}], 'messages': [{'from': '447472138610', 'id': 'wamid.HBgMNDQ3NDcyMTM4NjEwFQIAEhgUM0EyQUNGNkNCRkUyQzBERURDNjEA', 'timestamp': '1706481016', 'type': 'audio', 'audio': {'mime_type': 'audio/ogg; codecs=opus', 'sha256': 'n4EKagtCwv9j+qtbhfD6c106h4JJ3cfLgbAzLHDQ/Ck=', 'id': '235930636150989', 'voice': True}}]}, 'field': 'messages'}]}]}
 
 
 def test_text_message():
-    wm = WebHookNotification(**test_ping_message)
+    wm = WebHookNotification(**sample_text_message)
     assert wm.object == "whatsapp_business_account"
 
-def test_text_message():
-    wm = WebHookNotification(**text_message)
+
+def test_audio_message():
+    wm = WebHookNotification(**sample_audio_message)
     assert wm.object == "whatsapp_business_account"
 
 
@@ -254,9 +43,4 @@ def test_sticker_message():
 
 def test_location_message():
     wm = WebHookNotification(**location_message)
-    assert wm.object == "whatsapp_business_account"
-
-
-def test_audio_message():
-    wm = WebHookNotification(**audio_message)
     assert wm.object == "whatsapp_business_account"

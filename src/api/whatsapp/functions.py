@@ -1,4 +1,4 @@
-from src.api.whatsapp.schema import MissingParametersException, VerificationException
+from src.api.whatsapp.schema import MissingParametersException, VerificationException, WebHookNotification
 
 
 def veryify_webhook(request):
@@ -19,3 +19,8 @@ def veryify_webhook(request):
         return challenge
 
     raise VerificationException()
+
+
+def process_message(message: WebHookNotification):
+    print(f"-->{message.entry[0].changes[0].value}")
+    return message.model_dump()

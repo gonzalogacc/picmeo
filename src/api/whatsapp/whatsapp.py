@@ -1,8 +1,10 @@
 import json
+import sys
+import traceback
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, HTTPException
 
-from src.api.whatsapp.functions import veryify_webhook
+from src.api.whatsapp.functions import veryify_webhook, process_message
 from src.api.whatsapp.schema import WebHookNotification
 
 
@@ -24,21 +26,33 @@ class WhatsappClient:
             """
             hub.mode=subscribe&hub.challenge=1918437135&hub.verify_token=verificacion
             """
-            # try:
-            print(request)
-            return veryify_webhook(request)
+            try:
+                return veryify_webhook(request)
 
-            # except Exception as e:
-            #    print(e)
-            #    raise HTTPException(status_code=500, detail="Error")
+            except Exception as e:
+                raise HTTPException(status_code=500, detail="Error")
 
         @webhooks_api.post("/")
         async def message(request: Request):
             data = json.loads(await request.body())
             print(data)
+
+            ## Hack to purge message queue (say SI to anything)
             return dict(message="OK")
+
+            # try:
+            print("xxxxxxxxxxxxxxxxxxxxxxxxxxxx")
             message = WebHookNotification(**data)
             print(message)
+            print("---------------------------")
+            pm = process_message(message)
+            print(pm)
+
+            # except Exception as e:
+            #     print("+++++++++++++++++++++++++++")
+            #     print(e)
+            #     print("+++++++++++++++++++++++++++")
+
             return dict(message="OK")
 
         self.router.include_router(webhooks_api)
