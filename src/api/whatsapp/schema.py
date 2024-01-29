@@ -99,16 +99,11 @@ class Video(BaseModel):
     mime_type: str
 
 
-class Reaction(BaseModel):
-    message_id: str
-    emoji: str
-
-
 class Location(BaseModel):
     latitude: float
     longitude: float
-    name: str
-    address: str
+    name: Optional[str] = None
+    address: Optional[str] = None
 
 
 def _epoch_str_parser(t: str):
@@ -143,6 +138,11 @@ class ImageMessage(MessageBase):
     image: Image
 
 
+class Reaction(BaseModel):
+    message_id: str
+    emoji: str
+
+
 class ReactionMessage(MessageBase):
     reaction: Reaction
 
@@ -155,16 +155,33 @@ class LocationMessage(MessageBase):
     location: Location
 
 
+class Name(BaseModel):
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    formatted_name: str
+
+
+class Phone(BaseModel):
+    phone: str
+    wa_id: str
+    type: str
+
+
+class ContactElement(BaseModel):
+    name: Name
+    phones: List[Phone]
+
+
 class ContactMessage(MessageBase):
-    contacts: List[Contact]
+    contacts: List[ContactElement]
 
 
 class Value(BaseModel):
     messaging_product: str
     metadata: dict
     contacts: List[Contact]
-    # messages: List[ImageMessage]
-    messages: List[Union[AudioMessage, TextMessage, ImageMessage, ReactionMessage, StickerMessage, LocationMessage, ContactMessage]]
+    messages: List[ContactMessage]
+    # messages: List[Union[AudioMessage, TextMessage, ImageMessage, ReactionMessage, StickerMessage, LocationMessage, ContactMessage]]
     errors: Optional[str] = None  # Implement
     statuses: Optional[dict] = None
 
