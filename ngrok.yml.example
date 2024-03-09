@@ -4,3 +4,4 @@ tunnels:
   first:
     addr: back:8080
     proto: http
+    domain: fxnxxe3xlaiffadxu4wwrjba3iuunomh.ngrok.io
