@@ -1,0 +1,6 @@
+authtoken: <API_key>
+version: "2"
+tunnels:
+  first:
+    addr: back:8080
+    proto: http
